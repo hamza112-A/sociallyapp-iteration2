@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MainActivity6">
+
+    <!-- Top Search Bar -->
+    <LinearLayout
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:layout_marginTop="60dp"
+        android:paddingEnd="16dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/search_box"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/search"
+                app:tint="@color/brown"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Search"
+                android:textColor="@color/brown"
+                android:textSize="19sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/scan_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/scan"
+            app:tint="@color/brown"
+            android:layout_marginStart="12dp"
+            android:contentDescription="scan" />
+
+    </LinearLayout>
+
+    <!-- Category Tabs -->
+    <HorizontalScrollView
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/search_bar">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:id="@+id/tab_shop"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="🛍️ Shop"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/input_box"
+                android:backgroundTint="@color/greyborder"
+                android:textColor="@color/brown"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tab_style"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Style"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/input_box"
+                android:backgroundTint="@color/greyborder"
+                android:textColor="@color/brown"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tab_sports"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Sports"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/input_box"
+                android:backgroundTint="@color/greyborder"
+                android:textColor="@color/brown"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tab_auto"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Auto"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/input_box"
+                android:backgroundTint="@color/greyborder"
+                android:textColor="@color/brown"
+                android:textSize="18sp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tab_music"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="Music"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/input_box"
+                android:backgroundTint="@color/greyborder"
+                android:textColor="@color/brown"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <!-- Main Content Grid -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/category"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <!-- Row 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <!-- Left Column - Tall -->
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/download"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+                <!-- Right Column -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <!-- Top Right -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="145dp"
+                        android:src="@drawable/a"
+                        android:scaleType="centerCrop"
+                        android:background="@color/greyborder"
+                        android:layout_margin="4dp" />
+
+                    <!-- Bottom Right -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="145dp"
+                        android:src="@drawable/b"
+                        android:scaleType="centerCrop"
+                        android:background="@color/greyborder"
+                        android:layout_margin="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Row 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/e"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/c"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/d"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+            </LinearLayout>
+
+            <!-- Row 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/f"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/g"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+            </LinearLayout>
+
+            <!-- Row 4 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <!-- Left Column -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:src="@drawable/i"
+                        android:scaleType="centerCrop"
+                        android:background="@color/greyborder"
+                        android:layout_margin="4dp" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:src="@drawable/download"
+                        android:scaleType="centerCrop"
+                        android:background="@color/greyborder"
+                        android:layout_margin="4dp" />
+
+                </LinearLayout>
+
+                <!-- Right Column - Tall -->
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="310dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/download"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+            </LinearLayout>
+
+            <!-- Row 5 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/download"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/download"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/download"
+                    android:scaleType="centerCrop"
+                    android:background="@color/greyborder"
+                    android:layout_margin="4dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Bottom Navigation -->
+    <View
+        android:id="@+id/bottomline"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="2"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="24dp"
+        android:background="@color/grey"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="35dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/home_navigation"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/home"
+            android:contentDescription="Home" />
+
+        <ImageView
+            android:id="@+id/search_navigation"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/search"
+            android:contentDescription="Search" />
+
+        <ImageView
+            android:id="@+id/add_navigation"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/add"
+            android:contentDescription="Add" />
+
+        <ImageView
+            android:id="@+id/like_navigation"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/like"
+            android:contentDescription="like" />
+
+        <ImageView
+            android:id="@+id/prof_navigation"
+            android:layout_width="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="30dp"
+            android:src="@drawable/download"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background"
+            android:clipToOutline="true"  />
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity3">
+    <!-- App Name -->
+    <TextView
+        android:id="@+id/txt_socially"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Socially"
+        android:textColor="@color/brown"
+        android:textSize="55dp"
+        android:textStyle="bold"
+        android:layout_marginTop="280dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Profile Picture -->
+    <ImageView
+        android:id="@+id/Profile"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/pic"
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="@color/white"
+        android:clipToOutline="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/Username"
+        app:layout_constraintTop_toBottomOf="@id/txt_socially"/>
+
+    <!-- Username -->
+
+    <!-- Login Button -->
+    <!--<Button-->
+
+    <TextView
+        android:id="@+id/Username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="jacob_w"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Profile" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="300dp"
+        android:background="@drawable/rectangle"
+        android:backgroundTint="@color/brown"
+        android:text="Log in"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/footer"/>
+
+    <!-- Switch Accounts -->
+    <TextView
+        android:id="@+id/switchaccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch accounts"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/brown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button"/>
+
+    <!-- Bottom Text -->
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don’t have an account? "
+            android:textSize="17sp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/SignUpLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up."
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="#8B3C3C"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

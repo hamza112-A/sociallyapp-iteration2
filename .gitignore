@@ -1,0 +1,51 @@
+# -------------------------------
+# Android / Gradle Build
+# -------------------------------
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# -------------------------------
+# Android Studio / IntelliJ
+# -------------------------------
+.idea/
+*.iml
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# -------------------------------
+# Local Configuration
+# -------------------------------
+local.properties
+.gradle/
+.cxx/
+.externalNativeBuild/
+
+# -------------------------------
+# OS and IDE Junk
+# -------------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------------
+# Logs and Captures
+# -------------------------------
+*.log
+captures/
+
+# -------------------------------
+# Keystore / Signing
+# -------------------------------
+*.jks
+*.keystore
+
+# -------------------------------
+# Kotlin / Misc
+# -------------------------------
+.kotlinc/
+.kotlin/
