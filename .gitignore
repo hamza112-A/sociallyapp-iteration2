@@ -19,6 +19,12 @@ build/
 .idea/assetWizardSettings.xml
 
 # -------------------------------
+# Firebase Config
+# -------------------------------
+app/google-services.json
+
+
+# -------------------------------
 # Local Configuration
 # -------------------------------
 local.properties
