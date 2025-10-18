@@ -116,7 +116,19 @@ class MainActivity2 : AppCompatActivity() {
             return
         }
 
-        // Always produce a Base64 image string: try URI, then drawable fallback, then generate default
+        // Disable the sign-up button while we check uniqueness and save to avoid duplicates
+        val signUpButton = findViewById<AppCompatButton>(R.id.button)
+        signUpButton.isEnabled = false
+
+        val db = Firebase.firestore
+        // Use a case-insensitive key for username to enforce uniqueness server-side
+        val usernameKey = username.lowercase().trim().replace("/", "_")
+
+        // Prepare data map will be created after image processing, but we need a userDocRef for the transaction
+        val userDocRef = db.collection("users").document()
+        val usernameDocRef = db.collection("usernames").document(usernameKey)
+
+        // Proceed with image processing first (so image work is not repeated inside transaction)
         var imageBase64: String? = selectedImageUri?.let { uriToBase64(it) }
         if (imageBase64.isNullOrEmpty()) {
             val profileImageView = findViewById<ImageView>(R.id.profile_icon)
@@ -129,6 +141,7 @@ class MainActivity2 : AppCompatActivity() {
         if (imageBase64.isNullOrEmpty()) {
             // Last resort - this should not happen, but guard
             Toast.makeText(this, "Failed to prepare profile image", Toast.LENGTH_LONG).show()
+            signUpButton.isEnabled = true
             return
         }
 
@@ -137,10 +150,12 @@ class MainActivity2 : AppCompatActivity() {
             val imageBytes = Base64.decode(imageBase64, Base64.DEFAULT)
             if (imageBytes.size > 900_000) {
                 Toast.makeText(this, "Selected image is too large. Choose a smaller image.", Toast.LENGTH_LONG).show()
+                signUpButton.isEnabled = true
                 return
             }
         } catch (_: Exception) {
             Toast.makeText(this, "Failed to process image data", Toast.LENGTH_SHORT).show()
+            signUpButton.isEnabled = true
             return
         }
 
@@ -157,20 +172,32 @@ class MainActivity2 : AppCompatActivity() {
             "profileImageBase64" to imageBase64
         )
 
-        // Save to Firestore and pass the document id to Activity3
-        val db = Firebase.firestore
-        db.collection("users")
-            .add(user)
-            .addOnSuccessListener { documentReference ->
+        // Run an atomic transaction: fail if username key already exists, otherwise create both documents
+        db.runTransaction { transaction ->
+            val snap = transaction.get(usernameDocRef)
+            if (snap.exists()) {
+                throw Exception("username_exists")
+            }
+            // Create user doc and username mapping
+            transaction.set(userDocRef, user)
+            transaction.set(usernameDocRef, mapOf("userId" to userDocRef.id))
+            // Transaction returns the new userId
+            userDocRef.id
+        }
+            .addOnSuccessListener { newUserId ->
                 Toast.makeText(this, "Account created and saved", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, MainActivity3::class.java)
-                // pass the Firestore document id so Activity3 can load the user
-                intent.putExtra("USER_ID", documentReference.id)
+                intent.putExtra("USER_ID", newUserId as String)
                 startActivity(intent)
                 finish()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Failed to save: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                if (e.message == "username_exists") {
+                    Toast.makeText(this, "Username already exists. Please choose another.", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Failed to save: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                }
+                signUpButton.isEnabled = true
             }
     }
 
