@@ -2,14 +2,42 @@ package com.mudassarkhalid.i221072
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MainActivity4 : AppCompatActivity() {
+    private val TAG = "MainActivity4"
+
+    // Runtime-safe check for debug build: try to read generated BuildConfig.DEBUG; fall back to false.
+    private fun isDebugBuild(): Boolean {
+        return try {
+            val pkg = this.packageName
+            val cls = Class.forName("$pkg.BuildConfig")
+            val field = cls.getField("DEBUG")
+            field.getBoolean(null)
+        } catch (t: Throwable) {
+            Log.w(TAG, "Unable to read BuildConfig.DEBUG via reflection: ${t.message}")
+            false
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Ensure Firebase is initialized before using Firestore/Auth
+        FirebaseApp.initializeApp(this)
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main4)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -17,11 +45,81 @@ class MainActivity4 : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        // Connect button to MainActivity5
-        val button = findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.button)
+
+        // UI references
+        val usernameInput = findViewById<EditText>(R.id.username)
+        val passwordInput = findViewById<EditText>(R.id.password)
+        val button = findViewById<AppCompatButton>(R.id.button)
+        val progress = findViewById<ProgressBar>(R.id.login_progress)
+
+        // Back icon behavior (if present)
+        val back = findViewById<android.widget.ImageView>(R.id.back_icon)
+        back?.setOnClickListener { finish() }
+
+        fun setUiEnabled(enabled: Boolean) {
+            usernameInput.isEnabled = enabled
+            passwordInput.isEnabled = enabled
+            button.isEnabled = enabled
+            progress.visibility = if (enabled) View.GONE else View.VISIBLE
+        }
+
+        // Login flow: validate non-empty fields and check credentials in Firestore
         button.setOnClickListener {
-            val intent = Intent(this, MainActivity5::class.java)
-            startActivity(intent)
+            val enteredUsername = usernameInput.text.toString().trim()
+            val enteredPassword = passwordInput.text.toString().trim()
+
+            if (enteredUsername.isEmpty()) {
+                Toast.makeText(this, getString(R.string.please_enter_username), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (enteredPassword.isEmpty()) {
+                Toast.makeText(this, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Disable UI while checking
+            setUiEnabled(false)
+
+            val db = Firebase.firestore
+
+            db.collection("users")
+                .whereEqualTo("username", enteredUsername)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty) {
+                        // No user with that username
+                        Toast.makeText(this, "Username or password is not correct", Toast.LENGTH_LONG).show()
+                        setUiEnabled(true)
+                        return@addOnSuccessListener
+                    }
+
+                    val doc = querySnapshot.documents[0]
+                    val firestoreUserId = doc.id
+                    val storedPassword = doc.getString("password") ?: ""
+                    val authUid = doc.getString("authUid") ?: ""
+
+                    if (isDebugBuild()) {
+                        Log.d(TAG, "Found user doc=$firestoreUserId, storedPwdLen=${storedPassword.length}")
+                    }
+
+                    if (storedPassword == enteredPassword) {
+                        // Credentials match: proceed
+                        val intent = Intent(this, MainActivity5::class.java)
+                        intent.putExtra("USER_ID", firestoreUserId)
+                        intent.putExtra("AUTH_UID", authUid)
+                        startActivity(intent)
+                    } else {
+                        // Password mismatch
+                        Toast.makeText(this, "Username or password is not correct", Toast.LENGTH_LONG).show()
+                    }
+
+                    setUiEnabled(true)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Failed to query users: ${e.localizedMessage}")
+                    Toast.makeText(this, "Login failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    setUiEnabled(true)
+                }
         }
     }
 }

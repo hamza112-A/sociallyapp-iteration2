@@ -23,7 +23,7 @@
     <string name="hint_address">Enter address</string>
 
     <string name="label_dob">Date of Birth</string>
-    <string name="hint_dob">01-05-2002</string>
+    <string name="hint_dob">01–05–2002</string>
 
     <string name="label_email">E-mail</string>
     <string name="hint_email">Enter E-mail</string>
@@ -38,4 +38,16 @@
     <string name="switch_accounts">Switch accounts</string>
     <string name="dont_have_account">Don’t have an account?</string>
     <string name="signup_text">Sign up.</string>
+    <string name="save_button">Save</string>
+
+    <!-- Login related strings -->
+    <string name="please_enter_username">Please enter username</string>
+    <string name="please_enter_password">Please enter password</string>
+    <string name="credentials_incorrect">Username or password is incorrect</string>
+    <string name="login_failed">Login failed: %1$s</string>
+
+    <!-- Activity4 strings -->
+    <string name="login_button_text">Log in</string>
+    <string name="or_text">OR</string>
+    <string name="forget_password">Forget Password?</string>
 </resources>

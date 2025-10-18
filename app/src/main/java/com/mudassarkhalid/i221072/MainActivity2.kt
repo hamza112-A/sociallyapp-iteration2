@@ -3,13 +3,10 @@ package com.mudassarkhalid.i221072
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
-import android.util.Patterns
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -70,6 +67,13 @@ class MainActivity2 : AppCompatActivity() {
 
         profileImage.setOnClickListener { pickListener() }
         cameraOverlay.setOnClickListener { pickListener() }
+
+        // Top-right Login button navigates to MainActivity4
+        val loginTop = findViewById<AppCompatButton>(R.id.login_top)
+        loginTop.setOnClickListener {
+            val intent = Intent(this, MainActivity4::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun createAccountAndSave() {
@@ -103,7 +107,7 @@ class MainActivity2 : AppCompatActivity() {
             Toast.makeText(this, "Date of birth is required", Toast.LENGTH_SHORT).show()
             return
         }
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(this, "Please provide a valid email", Toast.LENGTH_SHORT).show()
             return
         }
@@ -153,13 +157,15 @@ class MainActivity2 : AppCompatActivity() {
             "profileImageBase64" to imageBase64
         )
 
-        // Save to Firestore
+        // Save to Firestore and pass the document id to Activity3
         val db = Firebase.firestore
         db.collection("users")
             .add(user)
-            .addOnSuccessListener {
+            .addOnSuccessListener { documentReference ->
                 Toast.makeText(this, "Account created and saved", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, MainActivity3::class.java)
+                // pass the Firestore document id so Activity3 can load the user
+                intent.putExtra("USER_ID", documentReference.id)
                 startActivity(intent)
                 finish()
             }
@@ -195,7 +201,7 @@ class MainActivity2 : AppCompatActivity() {
                     val bmp = Bitmap.createBitmap(drawable.intrinsicWidth.takeIf { it > 0 } ?: 1,
                         drawable.intrinsicHeight.takeIf { it > 0 } ?: 1,
                         Bitmap.Config.ARGB_8888)
-                    val canvas = Canvas(bmp)
+                    val canvas = android.graphics.Canvas(bmp)
                     drawable.setBounds(0, 0, canvas.width, canvas.height)
                     drawable.draw(canvas)
                     bmp
@@ -220,8 +226,8 @@ class MainActivity2 : AppCompatActivity() {
     private fun generateDefaultBase64(): String? {
         return try {
             val bmp = Bitmap.createBitmap(16, 16, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bmp)
-            canvas.drawColor(Color.LTGRAY)
+            val canvas = android.graphics.Canvas(bmp)
+            canvas.drawColor(android.graphics.Color.LTGRAY)
             val baos = ByteArrayOutputStream()
             bmp.compress(Bitmap.CompressFormat.JPEG, 60, baos)
             val bytes = baos.toByteArray()

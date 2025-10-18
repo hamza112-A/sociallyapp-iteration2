@@ -34,6 +34,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp" />
 
+    <!-- LOGIN button top-right -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/login_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="18dp" />
+
     <TextView
         android:id="@+id/txt_discription"
         android:layout_width="wrap_content"
