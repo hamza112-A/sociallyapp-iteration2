@@ -6,4 +6,17 @@
     </style>
 
     <style name="Theme.I221072" parent="Base.Theme.I221072" />
+
+    <!-- ShapeAppearance for circular images (50% corner => circle for square views) -->
+    <style name="ShapeAppearance.Circle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Legacy fallback style name for libraries expecting @style/ShapeAppearance -->
+    <style name="ShapeAppearance">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>
