@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Allow app to access the network (required for Firebase/Firestore) -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -21,9 +23,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity21"
-            android:exported="false" />
         <activity
             android:name=".MainActivity20"
             android:exported="false" />

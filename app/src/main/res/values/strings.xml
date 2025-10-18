@@ -19,6 +19,9 @@
     <string name="label_yourlastname">Your Last Name</string>
     <string name="hint_yourlastname">Your Last Name</string>
 
+    <string name="label_address">Address</string>
+    <string name="hint_address">Enter address</string>
+
     <string name="label_dob">Date of Birth</string>
     <string name="hint_dob">01-05-2002</string>
 
