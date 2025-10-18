@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">i221072</string>
+
+    <!-- Strings used by activity_main2.xml -->
+    <string name="arrow_back_desc">Arrow back</string>
+    <string name="socially">Socially</string>
+    <string name="create_account_description">Create an account and sign up</string>
+    <string name="profile_desc">Profile</string>
+    <string name="app_icon_desc">App icon</string>
+    <string name="create_account_button">Create an Account</string>
+
+    <!-- Form labels and hints -->
+    <string name="label_username">Username</string>
+    <string name="hint_username">user</string>
+
+    <string name="label_yourname">Your Name</string>
+    <string name="hint_yourname">Your Name</string>
+
+    <string name="label_yourlastname">Your Last Name</string>
+    <string name="hint_yourlastname">Your Last Name</string>
+
+    <string name="label_dob">Date of Birth</string>
+    <string name="hint_dob">01-05-2002</string>
+
+    <string name="label_email">E-mail</string>
+    <string name="hint_email">Enter E-mail</string>
+
+    <string name="label_password">Password</string>
+    <string name="hint_password">Password</string>
+
+    <!-- Strings used by activity_main3.xml -->
+    <string name="txt_socially">Socially</string>
+    <string name="default_username">jacob_w</string>
+    <string name="login_button">Log in</string>
+    <string name="switch_accounts">Switch accounts</string>
+    <string name="dont_have_account">Don’t have an account?</string>
+    <string name="signup_text">Sign up.</string>
 </resources>

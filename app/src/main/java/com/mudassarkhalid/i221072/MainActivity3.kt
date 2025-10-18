@@ -2,6 +2,7 @@ package com.mudassarkhalid.i221072
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,6 +23,12 @@ class MainActivity3 : AppCompatActivity() {
         button.setOnClickListener {
             val intent = Intent(this, MainActivity4::class.java)
             startActivity(intent)
+        }
+
+        // Handle the back arrow: finish this activity when tapped
+        val arrow = findViewById<ImageView>(R.id.arrow_back)
+        arrow.setOnClickListener {
+            finish()
         }
     }
 }

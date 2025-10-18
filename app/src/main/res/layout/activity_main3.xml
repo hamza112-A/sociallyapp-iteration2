@@ -3,110 +3,151 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".MainActivity3">
-    <!-- App Name -->
+
+    <!-- Back arrow (keeps same id so existing code works) -->
+    <ImageView
+        android:id="@+id/arrow_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/arrow"
+        android:contentDescription="@string/arrow_back_desc"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp" />
+
+    <!-- App title centered -->
     <TextView
         android:id="@+id/txt_socially"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Socially"
+        android:text="@string/txt_socially"
         android:textColor="@color/brown"
-        android:textSize="55dp"
+        android:textSize="38sp"
         android:textStyle="bold"
-        android:layout_marginTop="280dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <!-- Profile Picture -->
-    <ImageView
-        android:id="@+id/Profile"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/pic"
-        android:scaleType="centerCrop"
-        android:background="@drawable/circle_background"
-        android:backgroundTint="@color/white"
-        android:clipToOutline="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/Username"
-        app:layout_constraintTop_toBottomOf="@id/txt_socially"/>
+        app:layout_constraintVertical_bias="0.3"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
 
-    <!-- Username -->
-
-    <!-- Login Button -->
-    <!--<Button-->
-
-    <TextView
-        android:id="@+id/Username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="jacob_w"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Profile" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="300dp"
-        android:background="@drawable/rectangle"
-        android:backgroundTint="@color/brown"
-        android:text="Log in"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/footer"/>
-
-    <!-- Switch Accounts -->
-    <TextView
-        android:id="@+id/switchaccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Switch accounts"
-        android:textSize="18sp"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/brown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button"/>
-
-    <!-- Bottom Text -->
+    <!-- Central container: vertically centered group of views so everything stays together -->
     <LinearLayout
-        android:id="@+id/footer"
+        android:id="@+id/center_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@id/txt_socially"
+        app:layout_constraintBottom_toTopOf="@id/footer_container"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="50dp">
+
+        <!-- Profile picture centered -->
+        <ImageView
+            android:id="@+id/Profile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/pic"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background"
+            android:contentDescription="@string/profile_desc"
+            android:importantForAutofill="no"
+            />
+
+        <!-- Username below profile -->
+        <TextView
+            android:id="@+id/Username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_username"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:layout_marginTop="12dp" />
+
+        <!-- Primary action button (full-width with side padding) -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rectangle"
+            android:backgroundTint="@color/brown"
+            android:text="@string/login_button"
+            android:textSize="18sp"
+            android:textColor="@color/white" />
+
+        <!-- Switch accounts text -->
+        <TextView
+            android:id="@+id/switchaccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/switch_accounts"
+            android:textSize="16sp"
+            android:textColor="@color/brown"
+            android:layout_marginTop="12dp" />
+
+    </LinearLayout>
+
+    <!-- Transparent divider between center content and footer -->
+    <View
+        android:id="@+id/divider_transparent"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#33000000"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@id/center_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
+
+    <!-- Footer anchored to bottom: centered small texts -->
+    <LinearLayout
+        android:id="@+id/footer_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="40dp">
 
         <TextView
             android:id="@+id/signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don’t have an account? "
-            android:textSize="17sp"
-            android:textColor="@android:color/black"/>
+            android:text="@string/dont_have_account"
+            android:textSize="15sp"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/SignUpLink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign up."
-            android:textSize="17sp"
+            android:text="@string/signup_text"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="#8B3C3C"/>
+            android:textColor="#8B3C3C"
+            android:layout_marginStart="6dp" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
