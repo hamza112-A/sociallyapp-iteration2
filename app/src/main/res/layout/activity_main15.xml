@@ -330,7 +330,7 @@
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:text="+1 202 555 0147"
+                    android:text="+92 202 555 0147"
                     android:textSize="17sp"
                     android:textColor="@color/black"
                     android:paddingStart="16dp"
