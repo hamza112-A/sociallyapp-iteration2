@@ -76,74 +76,56 @@
         app:layout_constraintTop_toBottomOf="@+id/topbar" />
 
     <!-- Posts Count -->
-    <TextView
-        android:id="@+id/PostsCount"
+    <!-- Posts Button -->
+    <Button
+        android:id="@+id/btnPosts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="30dp"
-        android:text="54"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:text="54\nPosts"
+        android:textAlignment="center"
+        android:textSize="18sp"
         android:textColor="@color/black"
-        android:layout_marginStart="40dp"
+        android:textStyle="bold"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:padding="2dp"
         app:layout_constraintStart_toEndOf="@+id/ProfilePicture"
         app:layout_constraintTop_toTopOf="@+id/ProfilePicture" />
 
-    <TextView
-        android:id="@+id/tvPostsLabel"
+    <!-- Followers Button -->
+    <Button
+        android:id="@+id/btnFollowers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Posts"
+        android:text="834\nFollowers"
+        android:textAlignment="center"
         android:textSize="18sp"
-        android:textColor="#666666"
-        app:layout_constraintStart_toStartOf="@+id/PostsCount"
-        app:layout_constraintTop_toBottomOf="@+id/PostsCount" />
-
-    <!-- Followers Count -->
-    <TextView
-        android:id="@+id/FollowersCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="834"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:textColor="@color/black"
-        android:layout_marginStart="30dp"
-        app:layout_constraintStart_toEndOf="@+id/PostsCount"
-        app:layout_constraintTop_toTopOf="@+id/PostsCount" />
-
-    <TextView
-        android:id="@+id/FollowersLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Followers"
-        android:textSize="18sp"
-        android:textColor="#666666"
-        app:layout_constraintStart_toStartOf="@+id/FollowersCount"
-        app:layout_constraintTop_toBottomOf="@+id/FollowersCount" />
-
-    <!-- Following Count -->
-    <TextView
-        android:id="@+id/FollowingCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="162"
-        android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginStart="30dp"
-        app:layout_constraintStart_toEndOf="@+id/FollowersCount"
-        app:layout_constraintTop_toTopOf="@+id/FollowersCount" />
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:padding="2dp"
+        app:layout_constraintStart_toEndOf="@+id/btnPosts"
+        app:layout_constraintTop_toTopOf="@+id/btnPosts" />
 
-    <TextView
-        android:id="@+id/FollowingLabel"
+    <!-- Following Button -->
+    <Button
+        android:id="@+id/btnFollowing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Following"
+        android:text="162\nFollowing"
+        android:textAlignment="center"
         android:textSize="18sp"
-        android:textColor="#666666"
-        app:layout_constraintStart_toStartOf="@+id/FollowingCount"
-        app:layout_constraintTop_toBottomOf="@+id/FollowingCount" />
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:padding="2dp"
+        app:layout_constraintStart_toEndOf="@+id/btnFollowers"
+        app:layout_constraintTop_toTopOf="@+id/btnFollowers" />
+
 
     <!-- Profile Name -->
     <TextView
