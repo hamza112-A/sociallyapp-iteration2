@@ -66,6 +66,16 @@ class MainActivity5 : AppCompatActivity() {
         val userProfile = sessionManager.getUserProfile() ?: ""
         // Use userName and userProfile to populate UI as needed
 
+        // Set profile image in prof_navigation from session
+        val profNav = findViewById<ImageView>(R.id.prof_navigation)
+        if (userProfile.isNotEmpty()) {
+            try {
+                val imageBytes = android.util.Base64.decode(userProfile, android.util.Base64.DEFAULT)
+                val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                profNav?.setImageBitmap(bitmap)
+            } catch (_: Exception) {}
+        }
+
         // Image picker launcher for selecting an image from gallery
         val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(
             ActivityResultContracts.GetContent()
@@ -93,7 +103,6 @@ class MainActivity5 : AppCompatActivity() {
         }
 
         // Redirect to MainActivity13 when prof_navigation is clicked
-        val profNav = findViewById<ImageView>(R.id.prof_navigation)
         profNav.setOnClickListener {
             val intent = android.content.Intent(this, MainActivity13::class.java)
             startActivity(intent)

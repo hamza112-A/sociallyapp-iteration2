@@ -16,5 +16,17 @@ class MainActivity11 : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Set profile image in prof_navigation from session
+        val sessionManager = SessionManager(this)
+        val userProfile = sessionManager.getUserProfile() ?: ""
+        val profNav = findViewById<android.widget.ImageView>(R.id.prof_navigation)
+        if (userProfile.isNotEmpty()) {
+            try {
+                val imageBytes = android.util.Base64.decode(userProfile, android.util.Base64.DEFAULT)
+                val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                profNav?.setImageBitmap(bitmap)
+            } catch (_: Exception) {}
+        }
     }
 }

@@ -42,5 +42,41 @@ class MainActivity13 : AppCompatActivity() {
             val intent = android.content.Intent(this, MainActivity13::class.java)
             startActivity(intent)
         }
+
+        // Session check: if not active, redirect to login
+        val sessionManager = SessionManager(this)
+        val firebaseUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        if (!sessionManager.isSessionActive() || firebaseUser == null) {
+            val intent = android.content.Intent(this, MainActivity4::class.java)
+            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+            return
+        }
+
+        // Load user info from session for fast UI
+        val userName = sessionManager.getUserName() ?: ""
+        val userProfile = sessionManager.getUserProfile() ?: ""
+        // Set userName and userProfile to profile UI elements
+        val userNameView = findViewById<android.widget.TextView>(R.id.ProfileName)
+        userNameView?.text = userName
+        val profileImageView = findViewById<android.widget.ImageView>(R.id.ProfilePicture)
+        if (userProfile.isNotEmpty()) {
+            try {
+                val imageBytes = android.util.Base64.decode(userProfile, android.util.Base64.DEFAULT)
+                val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                profileImageView?.setImageBitmap(bitmap)
+            } catch (_: Exception) {}
+        }
+
+        // Set profile image in prof_navigation from session
+        val userProfileNav = sessionManager.getUserProfile() ?: ""
+        if (userProfileNav.isNotEmpty()) {
+            try {
+                val imageBytes = android.util.Base64.decode(userProfileNav, android.util.Base64.DEFAULT)
+                val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                profNav?.setImageBitmap(bitmap)
+            } catch (_: Exception) {}
+        }
     }
 }

@@ -19,6 +19,16 @@ class MainActivity6 : AppCompatActivity() {
 
         // Redirect to MainActivity13 when prof_navigation is clicked
         val profNav = findViewById<android.widget.ImageView>(R.id.prof_navigation)
+        // Set profile image in prof_navigation from session
+        val sessionManager = SessionManager(this)
+        val userProfile = sessionManager.getUserProfile() ?: ""
+        if (userProfile.isNotEmpty()) {
+            try {
+                val imageBytes = android.util.Base64.decode(userProfile, android.util.Base64.DEFAULT)
+                val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                profNav?.setImageBitmap(bitmap)
+            } catch (_: Exception) {}
+        }
         profNav.setOnClickListener {
             val intent = android.content.Intent(this, MainActivity13::class.java)
             startActivity(intent)
