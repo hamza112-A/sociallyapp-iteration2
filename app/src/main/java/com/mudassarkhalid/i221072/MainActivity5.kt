@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.ImageView
+import android.widget.Toast
 
 class MainActivity5 : AppCompatActivity() {
     // keep selected story image Uri here (if the user picked one)
@@ -19,6 +20,18 @@ class MainActivity5 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Session check: if not active, redirect to login
+        val sessionManager = SessionManager(this)
+        val firebaseUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        if (!sessionManager.isSessionActive() || firebaseUser == null) {
+            val intent = android.content.Intent(this, MainActivity4::class.java)
+            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+            return
+        }
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main5)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -26,6 +39,32 @@ class MainActivity5 : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Sign Out button logic
+        val signOutBtn = findViewById<android.widget.Button>(R.id.sign_out_button)
+        signOutBtn?.setOnClickListener {
+            // Sign out from FirebaseAuth
+            com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+            // Clear session from SharedPreferences
+            sessionManager.clearSession()
+            Log.d(TAG, "Session cleared and user signed out.")
+            // Double-check: block access if session is not cleared
+            if (!sessionManager.isSessionActive() && com.google.firebase.auth.FirebaseAuth.getInstance().currentUser == null) {
+                val intent = android.content.Intent(this, MainActivity4::class.java)
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            } else {
+                // If session is not cleared, show error and force clear
+                Toast.makeText(this, "Session not cleared. Please restart the app.", Toast.LENGTH_LONG).show()
+                sessionManager.clearSession()
+            }
+        }
+
+        // Example: Load user info from session for fast UI
+        val userName = sessionManager.getUserName() ?: ""
+        val userProfile = sessionManager.getUserProfile() ?: ""
+        // Use userName and userProfile to populate UI as needed
 
         // Image picker launcher for selecting an image from gallery
         val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(

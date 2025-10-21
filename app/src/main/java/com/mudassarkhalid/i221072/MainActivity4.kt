@@ -104,13 +104,32 @@ class MainActivity4 : AppCompatActivity() {
 
                     if (storedPassword == enteredPassword) {
                         // Credentials match: proceed
-                        val intent = Intent(this, MainActivity5::class.java)
-                        intent.putExtra("USER_ID", firestoreUserId)
-                        intent.putExtra("AUTH_UID", authUid)
-                        startActivity(intent)
+                        val userName = doc.getString("username") ?: ""
+                        val userEmail = doc.getString("email") ?: ""
+                        val userProfile = doc.getString("profileImageBase64") ?: ""
+
+                        // Sign in with FirebaseAuth using email and password
+                        val firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance()
+                        firebaseAuth.signInWithEmailAndPassword(userEmail, enteredPassword)
+                            .addOnCompleteListener { authTask ->
+                                if (authTask.isSuccessful) {
+                                    // Save session
+                                    val sessionManager = SessionManager(this)
+                                    sessionManager.saveSession(authUid, userName, userEmail, userProfile)
+
+                                    val intent = Intent(this, MainActivity5::class.java)
+                                    intent.putExtra("USER_ID", firestoreUserId)
+                                    intent.putExtra("AUTH_UID", authUid)
+                                    startActivity(intent)
+                                } else {
+                                    Toast.makeText(this, "FirebaseAuth sign-in failed: " + (authTask.exception?.localizedMessage ?: "Unknown error"), Toast.LENGTH_LONG).show()
+                                }
+                                setUiEnabled(true)
+                            }
                     } else {
                         // Password mismatch
                         Toast.makeText(this, "Username or password is not correct", Toast.LENGTH_LONG).show()
+                        setUiEnabled(true)
                     }
 
                     setUiEnabled(true)

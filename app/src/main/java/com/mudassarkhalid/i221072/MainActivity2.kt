@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -99,105 +100,81 @@ class MainActivity2 : AppCompatActivity() {
             Toast.makeText(this, "Last name is required", Toast.LENGTH_SHORT).show()
             return
         }
-        if (address.isEmpty()) {
-            Toast.makeText(this, "Address is required", Toast.LENGTH_SHORT).show()
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Email is required", Toast.LENGTH_SHORT).show()
             return
         }
-        if (dob.isEmpty()) {
-            Toast.makeText(this, "Date of birth is required", Toast.LENGTH_SHORT).show()
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
             return
         }
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Please provide a valid email", Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (password.length < 6) {
-            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Password is required", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Disable the sign-up button while we check uniqueness and save to avoid duplicates
-        val signUpButton = findViewById<AppCompatButton>(R.id.button)
-        signUpButton.isEnabled = false
+        Log.d("MainActivity2", "Attempting registration with email: $email and password: $password")
 
-        val db = Firebase.firestore
-        // Use a case-insensitive key for username to enforce uniqueness server-side
-        val usernameKey = username.lowercase().trim().replace("/", "_")
+        // Register user with FirebaseAuth
+        val firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance()
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { authTask ->
+                if (authTask.isSuccessful) {
+                    val firebaseUser = firebaseAuth.currentUser
+                    val authUid = firebaseUser?.uid ?: ""
 
-        // Prepare data map will be created after image processing, but we need a userDocRef for the transaction
-        val userDocRef = db.collection("users").document()
-        val usernameDocRef = db.collection("usernames").document(usernameKey)
+                    // Prepare profile image as Base64 (if selected)
+                    var profileImageBase64 = ""
+                    selectedImageUri?.let { uri ->
+                        val inputStream = contentResolver.openInputStream(uri)
+                        val bitmap = BitmapFactory.decodeStream(inputStream)
+                        val outputStream = ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                        val imageBytes = outputStream.toByteArray()
+                        profileImageBase64 = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+                    }
 
-        // Proceed with image processing first (so image work is not repeated inside transaction)
-        var imageBase64: String? = selectedImageUri?.let { uriToBase64(it) }
-        if (imageBase64.isNullOrEmpty()) {
-            val profileImageView = findViewById<ImageView>(R.id.profile_icon)
-            imageBase64 = drawableToBase64(profileImageView)
-        }
-        if (imageBase64.isNullOrEmpty()) {
-            imageBase64 = generateDefaultBase64()
-        }
-
-        if (imageBase64.isNullOrEmpty()) {
-            // Last resort - this should not happen, but guard
-            Toast.makeText(this, "Failed to prepare profile image", Toast.LENGTH_LONG).show()
-            signUpButton.isEnabled = true
-            return
-        }
-
-        // Optional size check (binary size) to avoid huge documents
-        try {
-            val imageBytes = Base64.decode(imageBase64, Base64.DEFAULT)
-            if (imageBytes.size > 900_000) {
-                Toast.makeText(this, "Selected image is too large. Choose a smaller image.", Toast.LENGTH_LONG).show()
-                signUpButton.isEnabled = true
-                return
-            }
-        } catch (_: Exception) {
-            Toast.makeText(this, "Failed to process image data", Toast.LENGTH_SHORT).show()
-            signUpButton.isEnabled = true
-            return
-        }
-
-        // Prepare data map
-        val user = hashMapOf<String, Any?>(
-            "username" to username,
-            "firstName" to yourName,
-            "lastName" to yourLastName,
-            "address" to address,
-            "dob" to dob,
-            "email" to email,
-            // DO NOT store plaintext passwords in production; for demo only
-            "password" to password,
-            "profileImageBase64" to imageBase64
-        )
-
-        // Run an atomic transaction: fail if username key already exists, otherwise create both documents
-        db.runTransaction { transaction ->
-            val snap = transaction.get(usernameDocRef)
-            if (snap.exists()) {
-                throw Exception("username_exists")
-            }
-            // Create user doc and username mapping
-            transaction.set(userDocRef, user)
-            transaction.set(usernameDocRef, mapOf("userId" to userDocRef.id))
-            // Transaction returns the new userId
-            userDocRef.id
-        }
-            .addOnSuccessListener { newUserId ->
-                Toast.makeText(this, "Account created and saved", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, MainActivity3::class.java)
-                intent.putExtra("USER_ID", newUserId as String)
-                startActivity(intent)
-                finish()
-            }
-            .addOnFailureListener { e ->
-                if (e.message == "username_exists") {
-                    Toast.makeText(this, "Username already exists. Please choose another.", Toast.LENGTH_LONG).show()
+                    // Save user info to Firestore
+                    val db = Firebase.firestore
+                    val userMap = hashMapOf(
+                        "username" to username,
+                        "firstName" to yourName,
+                        "lastName" to yourLastName,
+                        "address" to address,
+                        "dob" to dob,
+                        "email" to email,
+                        "password" to password,
+                        "authUid" to authUid,
+                        "profileImageBase64" to profileImageBase64
+                    )
+                    Log.d("MainActivity2", "Attempting Firestore write for user: $authUid")
+                    db.collection("users").document(authUid)
+                        .set(userMap)
+                        .addOnSuccessListener {
+                            Log.d("MainActivity2", "Firestore write successful for user: $authUid")
+                            Toast.makeText(this, "Account created successfully!", Toast.LENGTH_LONG).show()
+                            // Optionally, navigate to login or main screen
+                            val intent = Intent(this, MainActivity4::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("MainActivity2", "Firestore write failed for user $authUid: ${e.localizedMessage}")
+                            Toast.makeText(this, "Failed to save user to database: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                        }
+                        .addOnCanceledListener {
+                            Log.e("MainActivity2", "Firestore write was canceled for user $authUid")
+                            Toast.makeText(this, "Firestore write was canceled.", Toast.LENGTH_LONG).show()
+                        }
                 } else {
-                    Toast.makeText(this, "Failed to save: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    val errorMsg = authTask.exception?.localizedMessage ?: "Unknown error"
+                    Log.e("MainActivity2", "Registration failed for email $email: $errorMsg")
+                    if (errorMsg.contains("email address is already in use", ignoreCase = true) || errorMsg.contains("EMAIL_EXISTS", ignoreCase = true)) {
+                        Toast.makeText(this, "This email is already registered. Please use a different email or log in.", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this, "Registration failed: $errorMsg", Toast.LENGTH_LONG).show()
+                    }
                 }
-                signUpButton.isEnabled = true
             }
     }
 

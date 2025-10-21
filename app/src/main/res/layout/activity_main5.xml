@@ -540,5 +540,20 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:layout_gravity="end"
+        android:contentDescription="Sign Out"
+        android:drawableTop="@drawable/ic_logout"
+        android:drawablePadding="4dp"
+        android:text="Sign Out"
+        android:textColor="@color/brown"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
