@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import android.content.Intent
 
 class MainActivity5 : AppCompatActivity() {
     // keep selected story image Uri here (if the user picked one)
@@ -305,6 +306,11 @@ class MainActivity5 : AppCompatActivity() {
                 // no picked image — fall back to the packaged drawable
                 intent.putExtra("story_drawable", R.drawable.a)
             }
+            startActivity(intent)
+        }
+
+        findViewById<ImageView>(R.id.like_navigation)?.setOnClickListener {
+            val intent = Intent(this, MainActivity11::class.java)
             startActivity(intent)
         }
     }
