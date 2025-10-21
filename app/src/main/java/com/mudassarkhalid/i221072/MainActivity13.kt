@@ -42,6 +42,11 @@ class MainActivity13 : AppCompatActivity() {
             val intent = android.content.Intent(this, MainActivity13::class.java)
             startActivity(intent)
         }
+        // Redirect to MainActivity11 when like_navigation is clicked
+        findViewById<android.widget.ImageView>(R.id.like_navigation)?.setOnClickListener {
+            val intent = android.content.Intent(this, MainActivity11::class.java)
+            startActivity(intent)
+        }
 
         // Session check: if not active, redirect to login
         val sessionManager = SessionManager(this)
