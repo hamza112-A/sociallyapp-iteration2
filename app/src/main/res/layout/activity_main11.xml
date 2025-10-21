@@ -23,29 +23,27 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <!-- Following Tab -->
-        <Button
+        <TextView
             android:id="@+id/followingTab"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Following"
+            android:text="following"
             android:textStyle="bold"
             android:textColor="@color/brown"
             android:textSize="16sp" />
 
         <!-- You Tab -->
-        <Button
+        <TextView
             android:id="@+id/youTab"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="You"
+            android:text="you"
             android:textColor="@color/brown"
-            android:textStyle="bold"
-            android:textSize="16sp" />
-
+            android:textStyle="bold" />
 
     </LinearLayout>
 
