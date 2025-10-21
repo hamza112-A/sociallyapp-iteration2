@@ -76,16 +76,112 @@ class MainActivity5 : AppCompatActivity() {
             } catch (_: Exception) {}
         }
 
-        // Image picker launcher for selecting an image from gallery
+        // Upload story to Firestore after image is picked
         val pickImageLauncher: ActivityResultLauncher<String> = registerForActivityResult(
             ActivityResultContracts.GetContent()
         ) { uri: Uri? ->
             uri?.let {
                 val storyImage = findViewById<ImageView>(R.id.your_story_image)
                 storyImage.setImageURI(it)
-                // save the selected URI so it can be forwarded to Activity18
                 selectedStoryUri = it
+
+                // Resize and compress image before upload
+                try {
+                    val inputStream = contentResolver.openInputStream(it)
+                    val originalBitmap = android.graphics.BitmapFactory.decodeStream(inputStream)
+                    inputStream?.close()
+                    val maxDim = 1024
+                    val width = originalBitmap.width
+                    val height = originalBitmap.height
+                    val scale = Math.min(maxDim.toFloat() / width, maxDim.toFloat() / height)
+                    val resizedBitmap = if (scale < 1) {
+                        android.graphics.Bitmap.createScaledBitmap(
+                            originalBitmap,
+                            (width * scale).toInt(),
+                            (height * scale).toInt(),
+                            true
+                        )
+                    } else {
+                        originalBitmap
+                    }
+                    val outputStream = java.io.ByteArrayOutputStream()
+                    resizedBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 80, outputStream)
+                    val imageBytes = outputStream.toByteArray()
+                    val imageBase64 = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT)
+
+                    val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+                    if (userId.isNullOrEmpty()) {
+                        Toast.makeText(this, "You must be logged in to upload a story.", Toast.LENGTH_LONG).show()
+                        Log.e(TAG, "Upload blocked: userId is null or empty.")
+                        return@let
+                    }
+                    val timestamp = System.currentTimeMillis()
+                    val expirationTime = timestamp + 24 * 60 * 60 * 1000 // 24 hours in ms
+                    val storyMap = hashMapOf(
+                        "userId" to userId,
+                        "imageBase64" to imageBase64,
+                        "timestamp" to timestamp,
+                        "expirationTime" to expirationTime
+                    )
+                    val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                    // Overwrite user's story document (use userId as doc id)
+                    db.collection("stories")
+                        .document(userId)
+                        .set(storyMap)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Story uploaded!", Toast.LENGTH_SHORT).show()
+                            Log.d(TAG, "Story uploaded for userId=$userId at $timestamp")
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Failed to upload story: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                            Log.e(TAG, "Failed to upload story: ${e.localizedMessage}")
+                        }
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Error processing image: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    Log.e(TAG, "Error processing image: ${e.localizedMessage}")
+                }
             }
+        }
+
+        // Load and display story (show profile photo if no story or expired)
+        val yourStoryImage = findViewById<ImageView>(R.id.your_story_image)
+        val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+        if (userId != null) {
+            db.collection("stories").document(userId).get()
+                .addOnSuccessListener { doc ->
+                    val expirationTime = doc.getLong("expirationTime") ?: 0L
+                    val now = System.currentTimeMillis()
+                    if (doc.exists() && expirationTime > now) {
+                        val imageBase64 = doc.getString("imageBase64")
+                        if (!imageBase64.isNullOrEmpty()) {
+                            val imageBytes = android.util.Base64.decode(imageBase64, android.util.Base64.DEFAULT)
+                            val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                            yourStoryImage.setImageBitmap(bitmap)
+                        }
+                    } else {
+                        // Show profile photo as default story
+                        val userProfile = sessionManager.getUserProfile() ?: ""
+                        if (userProfile.isNotEmpty()) {
+                            val imageBytes = android.util.Base64.decode(userProfile, android.util.Base64.DEFAULT)
+                            val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                            yourStoryImage.setImageBitmap(bitmap)
+                        } else {
+                            yourStoryImage.setImageResource(R.drawable.a)
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    // On error, fallback to profile photo
+                    val userProfile = sessionManager.getUserProfile() ?: ""
+                    if (userProfile.isNotEmpty()) {
+                        val imageBytes = android.util.Base64.decode(userProfile, android.util.Base64.DEFAULT)
+                        val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                        yourStoryImage.setImageBitmap(bitmap)
+                    } else {
+                        yourStoryImage.setImageResource(R.drawable.a)
+                    }
+                }
         }
 
         // Launch gallery when camera ImageView is clicked
