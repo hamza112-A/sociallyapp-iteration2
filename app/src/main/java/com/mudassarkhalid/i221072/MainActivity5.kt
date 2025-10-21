@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import android.widget.ImageView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import android.content.Intent
 
 class MainActivity5 : AppCompatActivity() {
     // keep selected story image Uri here (if the user picked one)
@@ -82,7 +84,11 @@ class MainActivity5 : AppCompatActivity() {
         ) { uri: Uri? ->
             uri?.let {
                 val storyImage = findViewById<ImageView>(R.id.your_story_image)
-                storyImage.setImageURI(it)
+                // Use Glide to load the picked image as a circle
+                Glide.with(this)
+                    .load(it)
+                    .circleCrop()
+                    .into(storyImage)
                 selectedStoryUri = it
 
                 // Resize and compress image before upload
@@ -124,7 +130,6 @@ class MainActivity5 : AppCompatActivity() {
                         "expirationTime" to expirationTime
                     )
                     val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
-                    // Overwrite user's story document (use userId as doc id)
                     db.collection("stories")
                         .document(userId)
                         .set(storyMap)
@@ -156,18 +161,27 @@ class MainActivity5 : AppCompatActivity() {
                         val imageBase64 = doc.getString("imageBase64")
                         if (!imageBase64.isNullOrEmpty()) {
                             val imageBytes = android.util.Base64.decode(imageBase64, android.util.Base64.DEFAULT)
-                            val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                            yourStoryImage.setImageBitmap(bitmap)
+                            Glide.with(this)
+                                .asBitmap()
+                                .load(imageBytes)
+                                .circleCrop()
+                                .into(yourStoryImage)
                         }
                     } else {
                         // Show profile photo as default story
                         val userProfile = sessionManager.getUserProfile() ?: ""
                         if (userProfile.isNotEmpty()) {
                             val imageBytes = android.util.Base64.decode(userProfile, android.util.Base64.DEFAULT)
-                            val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                            yourStoryImage.setImageBitmap(bitmap)
+                            Glide.with(this)
+                                .asBitmap()
+                                .load(imageBytes)
+                                .circleCrop()
+                                .into(yourStoryImage)
                         } else {
-                            yourStoryImage.setImageResource(R.drawable.a)
+                            Glide.with(this)
+                                .load(R.drawable.a)
+                                .circleCrop()
+                                .into(yourStoryImage)
                         }
                     }
                 }
@@ -176,10 +190,16 @@ class MainActivity5 : AppCompatActivity() {
                     val userProfile = sessionManager.getUserProfile() ?: ""
                     if (userProfile.isNotEmpty()) {
                         val imageBytes = android.util.Base64.decode(userProfile, android.util.Base64.DEFAULT)
-                        val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                        yourStoryImage.setImageBitmap(bitmap)
+                        Glide.with(this)
+                            .asBitmap()
+                            .load(imageBytes)
+                            .circleCrop()
+                            .into(yourStoryImage)
                     } else {
-                        yourStoryImage.setImageResource(R.drawable.a)
+                        Glide.with(this)
+                            .load(R.drawable.a)
+                            .circleCrop()
+                            .into(yourStoryImage)
                     }
                 }
         }
@@ -254,6 +274,24 @@ class MainActivity5 : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Load story thumbnails as circles using Glide
+        Glide.with(this)
+            .load(R.drawable.download)
+            .circleCrop()
+            .into(findViewById<ImageView>(R.id.story1_thumb))
+        Glide.with(this)
+            .load(R.drawable.c)
+            .circleCrop()
+            .into(findViewById<ImageView>(R.id.story2_thumb))
+        Glide.with(this)
+            .load(R.drawable.download)
+            .circleCrop()
+            .into(findViewById<ImageView>(R.id.story3_thumb))
+        Glide.with(this)
+            .load(R.drawable.e)
+            .circleCrop()
+            .into(findViewById<ImageView>(R.id.story4_thumb))
+
         // New: open the user's own story image in Activity18 when `your_story_image` is clicked
         val yourStory = findViewById<ImageView>(R.id.your_story_image)
         yourStory?.setOnClickListener {
@@ -268,6 +306,11 @@ class MainActivity5 : AppCompatActivity() {
                 // no picked image — fall back to the packaged drawable
                 intent.putExtra("story_drawable", R.drawable.a)
             }
+            startActivity(intent)
+        }
+
+        findViewById<ImageView>(R.id.like_navigation)?.setOnClickListener {
+            val intent = Intent(this, MainActivity11::class.java)
             startActivity(intent)
         }
     }

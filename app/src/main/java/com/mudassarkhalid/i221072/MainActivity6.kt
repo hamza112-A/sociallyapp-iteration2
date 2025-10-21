@@ -1,6 +1,8 @@
 package com.mudassarkhalid.i221072
 
 import android.os.Bundle
+import android.widget.ImageView
+import android.content.Intent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -44,6 +46,10 @@ class MainActivity6 : AppCompatActivity() {
         val searchNav = findViewById<android.widget.ImageView>(R.id.search_navigation)
         searchNav.setOnClickListener {
             val intent = android.content.Intent(this, MainActivity6::class.java)
+            startActivity(intent)
+        }
+        findViewById<ImageView>(R.id.like_navigation)?.setOnClickListener {
+            val intent = Intent(this, MainActivity11::class.java)
             startActivity(intent)
         }
     }

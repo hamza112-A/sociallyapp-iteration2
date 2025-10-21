@@ -1,6 +1,9 @@
 package com.mudassarkhalid.i221072
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -27,6 +30,22 @@ class MainActivity12 : AppCompatActivity() {
                 val bitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 profNav?.setImageBitmap(bitmap)
             } catch (_: Exception) {}
+        }
+
+        val followingTab = findViewById<Button>(R.id.followingTab)
+        val youTab = findViewById<Button>(R.id.youTab)
+        followingTab.setOnClickListener {
+            val intent = Intent(this, MainActivity11::class.java)
+            startActivity(intent)
+            finish()
+        }
+        youTab.setOnClickListener {
+            // Stay on Activity12
+        }
+
+        findViewById<ImageView>(R.id.like_navigation)?.setOnClickListener {
+            val intent = Intent(this, MainActivity11::class.java)
+            startActivity(intent)
         }
     }
 }
