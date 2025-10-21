@@ -22,20 +22,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Following Tab -->
-            <TextView
-                android:id="@+id/followingTab"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="following"
-                android:textStyle="bold"
-                android:textColor="@color/brown"
-                android:textSize="16sp" />
+        <!-- Following Tab -->
+        <Button
+            android:id="@+id/followingTab"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="following"
+            android:textStyle="bold"
+            android:textColor="@color/brown"
+            android:textSize="16sp" />
 
-            <!-- You Tab -->
-        <TextView
+        <!-- You Tab -->
+        <Button
             android:id="@+id/youTab"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -43,7 +43,8 @@
             android:gravity="center"
             android:text="you"
             android:textColor="@color/brown"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
