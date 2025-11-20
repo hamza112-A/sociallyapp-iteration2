@@ -248,7 +248,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="kiero_d, zackjohn and 26 others liked your photo."
+                            android:text="kiero_d, zacjohn and 26 others liked your photo."
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             android:textStyle="bold" />
