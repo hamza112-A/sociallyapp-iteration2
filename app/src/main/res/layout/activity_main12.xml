@@ -165,7 +165,7 @@
 
                 <ImageView
                     android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_height="51dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_launcher_foreground"
                     tools:src="@tools:sample/backgrounds/scenic" />
