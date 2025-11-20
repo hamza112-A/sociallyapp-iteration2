@@ -50,4 +50,14 @@
     <string name="login_button_text">Log in</string>
     <string name="or_text">OR</string>
     <string name="forget_password">Forget Password?</string>
+
+    <!-- Strings referenced by item_post.xml -->
+    <string name="profile_pic_desc">Profile picture</string>
+    <string name="username_label">username</string>
+    <string name="location_label">Location</string>
+    <string name="more_options">More options</string>
+    <string name="post_image_desc">Post image</string>
+    <string name="like_label">Like</string>
+    <string name="comment_label">Comment</string>
+    <string name="share_label">Share</string>
 </resources>

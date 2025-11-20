@@ -81,6 +81,7 @@
 
         <!-- End Call Button -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/endCallButton"
             android:layout_width="80dp"
             android:layout_height="80dp"
             app:cardBackgroundColor="#FF0000"
@@ -88,6 +89,7 @@
             app:cardElevation="8dp">
 
             <ImageView
+                android:id="@+id/endCallIcon"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
@@ -99,14 +101,13 @@
         <!-- Speaker Button -->
 
 
-            <ImageView
+                android:id="@+id/speakerToggle"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="40dp"
                 android:src="@drawable/speaker"
                 app:tint="@color/white" />
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

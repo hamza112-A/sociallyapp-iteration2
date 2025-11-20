@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 
 class MainActivity18 : AppCompatActivity() {
     private val TAG = "MainActivity18"
@@ -40,7 +41,16 @@ class MainActivity18 : AppCompatActivity() {
 
         if (parcelableUri != null) {
             Log.d(TAG, "Applying StoryBackground from Parcelable URI: $parcelableUri")
-            storyBackground?.setImageURI(parcelableUri)
+            // use Glide for robust URI handling
+            try {
+                Glide.with(this)
+                    .load(parcelableUri)
+                    .centerCrop()
+                    .into(storyBackground)
+            } catch (e: Exception) {
+                Log.w(TAG, "Glide failed to load parcelableUri, falling back", e)
+                storyBackground?.setImageURI(parcelableUri)
+            }
         } else {
             // 2) Fallback: string extra containing URI
             val storyUriString = intent?.getStringExtra("story_uri")
@@ -48,18 +58,39 @@ class MainActivity18 : AppCompatActivity() {
                 try {
                     val uri = Uri.parse(storyUriString)
                     Log.d(TAG, "Applying StoryBackground from URI string: $storyUriString")
-                    storyBackground?.setImageURI(uri)
+                    Glide.with(this)
+                        .load(uri)
+                        .centerCrop()
+                        .into(storyBackground)
                 } catch (e: Exception) {
                     Log.w(TAG, "Failed to parse/set story_uri string: $storyUriString", e)
                 }
             } else {
-                // 3) Final fallback: drawable id
-                val passedDrawable = intent?.getIntExtra("story_drawable", -1) ?: -1
-                if (passedDrawable != -1) {
-                    Log.d(TAG, "Applying StoryBackground from drawable id=$passedDrawable")
-                    storyBackground?.setImageResource(passedDrawable)
+                // 3) Fallback: base64 payload from Firestore (if provided)
+                val storyBase64 = intent?.getStringExtra("story_base64")
+                if (!storyBase64.isNullOrEmpty()) {
+                    try {
+                        val imageBytes = android.util.Base64.decode(storyBase64, android.util.Base64.DEFAULT)
+                        Log.d(TAG, "Applying StoryBackground from story_base64 (decoded ${imageBytes.size} bytes)")
+                        // use Glide to load decoded bytes (handles scaling/memory)
+                        Glide.with(this)
+                            .asBitmap()
+                            .load(imageBytes)
+                            .centerCrop()
+                            .into(storyBackground)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to decode/set story_base64", e)
+                        // continue to drawable fallback below
+                    }
                 } else {
-                    Log.d(TAG, "No story_uri or story_drawable provided; leaving default background")
+                    // 4) Final fallback: drawable id
+                    val passedDrawable = intent?.getIntExtra("story_drawable", -1) ?: -1
+                    if (passedDrawable != -1) {
+                        Log.d(TAG, "Applying StoryBackground from drawable id=$passedDrawable")
+                        storyBackground?.setImageResource(passedDrawable)
+                    } else {
+                        Log.d(TAG, "No story_uri, story_base64 or story_drawable provided; leaving default background")
+                    }
                 }
             }
         }
